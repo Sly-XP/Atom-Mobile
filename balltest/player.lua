@@ -33,6 +33,8 @@ function playerMovement(dt)
       player.y = player.y + player.speed * dt
     end
 
+
+
 end
 
 
