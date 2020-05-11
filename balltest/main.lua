@@ -6,13 +6,12 @@ function love.load()
 
   loadPlayer()
 
-
-
 end
 
 function love.update(dt)
   playerMovement(dt)
-  
+  playerAnimUpdate(dt)
+
 end
 
 function love.draw()
