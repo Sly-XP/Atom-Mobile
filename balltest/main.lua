@@ -6,6 +6,8 @@ function love.load()
 
   loadPlayer()
 
+  
+
 end
 
 function love.update(dt)
