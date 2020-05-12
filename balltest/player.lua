@@ -1,5 +1,7 @@
 function loadPlayer()
 
+  playerCategory = 1
+
   playerT = {}
 
   function spawnPlayer()
@@ -8,6 +10,7 @@ function loadPlayer()
     player.body = love.physics.newBody(myWorld, 198, 443, "dynamic")
     player.shape = love.physics.newRectangleShape(66, 92)
     player.fixture = love.physics.newFixture(player.body, player.shape)
+    player.fixture:setUserData('player')
     player.body:setFixedRotation(true)
     player.jumpHeight = -2500
 
@@ -106,6 +109,7 @@ function playerDraw()
   love.graphics.print('Player Direction: ' ..tostring(player.direction), 10, 70)
   love.graphics.print('Player Grounded: ' ..tostring(player.grounded), 10, 90)
   love.graphics.print('Timer : ' ..math.floor(timer), 10, 110)
+  love.graphics.print("Touching Enemy: " ..tostring(tunch), 10, 150)
 
 
 end

@@ -34,10 +34,36 @@ function love.draw()
 
 end
 
+tunch = false
 function beginContact(a, b, coll)
-  player.grounded = true
+  if a:getUserData() == "player" and b:getUserData() == 'platform' then
+    player.grounded = true
+  end
+
+  x,y = coll:getNormal()
+    if a:getUserData() then
+      if b:getUserData() then
+        if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
+            tunch = true
+        end
+      end
+    end
 end
 
 function endContact(a, b, coll)
-  player.grounded = false
+  if a:getUserData() == "player" and b:getUserData() == 'platform' then
+    player.grounded = false
+  end
+  x,y = coll:getNormal()
+    if a:getUserData() then
+      if b:getUserData() then
+          if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
+            tunch = false
+      end
+    end
+  end
+end
+
+function distanceBetween(x1, y1, x2, y2)
+  return math.sqrt((y2 - y1)^2 + (x2 - x1)^2)
 end
