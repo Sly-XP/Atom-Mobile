@@ -8,11 +8,11 @@ function loadPlayer()
     player = {}
 
     player.body = love.physics.newBody(myWorld, 198, 443, "dynamic")
-    player.shape = love.physics.newRectangleShape(66, 92)
+    player.shape = love.physics.newRectangleShape(48, 48)
     player.fixture = love.physics.newFixture(player.body, player.shape)
     player.fixture:setUserData('player')
     player.body:setFixedRotation(true)
-    player.jumpHeight = -2500
+    player.jumpHeight = -1000
 
     player.grounded = false
     player.x = 100
@@ -41,8 +41,8 @@ function loadPlayer()
   pA.defendFlip = anim8.newAnimation(playerGrid('5-8',1), 0.15):flipH()
   pA.run = anim8.newAnimation(playerGrid('1-5',2), 0.1)
   pA.runFlip = anim8.newAnimation(playerGrid('1-5',2), 0.1):flipH()
-  pA.attack = anim8.newAnimation(playerGrid('1-8',3), 0.1)
-  pA.attackFlip = anim8.newAnimation(playerGrid('1-8',3), 0.1):flipH()
+  pA.attack = anim8.newAnimation(playerGrid('3-8',3), 0.1)
+  pA.attackFlip = anim8.newAnimation(playerGrid('3-8',3), 0.1):flipH()
   pA.jump = anim8.newAnimation(playerGrid('4-4',5), 0.1)
   pA.jumpFlip = anim8.newAnimation(playerGrid('4-4',5), 0.1):flipH()
 
@@ -93,14 +93,15 @@ function playerAnimUpdate(dt)
   pA.attackFlip:update(dt)
   pA.jump:update(dt)
   pA.jumpFlip:update(dt)
+  playerAttack()
 end
 
 
 function playerDraw()
 
   for k,v in pairs(playerT) do
-    currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),  nil, nil, nil, 16, 16)
-    --love.graphics.draw(drawable,             x,                 y,               r, sx, sy, ox, oy, kx, ky)
+    currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),  nil, nil, nil, 32, 32)
+    --love.graphics.draw(drawable,             x,                 y,              r, sx,  sy,  ox, oy, kx, ky)
   end
 
   love.graphics.print("Player Attacking: " ..tostring(player.attackState), 10, 10)
@@ -109,7 +110,7 @@ function playerDraw()
   love.graphics.print('Player Direction: ' ..tostring(player.direction), 10, 70)
   love.graphics.print('Player Grounded: ' ..tostring(player.grounded), 10, 90)
   love.graphics.print('Timer : ' ..math.floor(timer), 10, 110)
-  love.graphics.print("Touching Enemy: " ..tostring(tunch), 10, 150)
+
 
 
 end
@@ -173,6 +174,22 @@ function love.mousereleased(x, y, button, isTouch)
   elseif button == 2 and currentAnimation == pA.defend then
     player.defending = false
     currentAnimation = pA.idle
+  end
+end
 
+function playerAttack()
+  for k,v in pairs(enemy) do
+    local distanceToPlayer = distanceBetween(player.body:getX(), player.body:getY(), v.body:getX(), v.body:getY())
+      if distanceToPlayer < 64 and player.attackState == true then
+        v.currentHealth = v.currentHealth - 10
+        if player.direction == 'right' then
+          v.body:applyLinearImpulse(50, -100)
+        elseif player.direction == 'left' then
+          v.body:applyLinearImpulse(-50, -100)
+        end
+        if v.currentHealth <= 0 then
+          v.dead = true
+        end
+      end
   end
 end
