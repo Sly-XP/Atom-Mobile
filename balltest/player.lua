@@ -101,7 +101,6 @@ function playerDraw()
 
   for k,v in pairs(playerT) do
     currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),  nil, nil, nil, 32, 32)
-    --love.graphics.draw(drawable,             x,                 y,              r, sx,  sy,  ox, oy, kx, ky)
   end
 
   love.graphics.print("Player Attacking: " ..tostring(player.attackState), 10, 10)
@@ -111,8 +110,6 @@ function playerDraw()
   love.graphics.print('Player Grounded: ' ..tostring(player.grounded), 10, 90)
   love.graphics.print('Timer : ' ..math.floor(timer), 10, 110)
 
-
-
 end
 
 function love.keypressed(k)
@@ -121,6 +118,9 @@ function love.keypressed(k)
   end
   if k == 'space' and player.grounded == true then
     player.body:applyLinearImpulse(0, player.jumpHeight)
+  end
+  if k == 's' then
+    spawnEnemy()
   end
 end
 
@@ -134,8 +134,6 @@ function love.keyreleased(k)
     player.moving = false
   end
 end
-
-
 
 
 function love.mousepressed(x, y, button, isTouch)
@@ -155,7 +153,6 @@ function love.mousepressed(x, y, button, isTouch)
     currentAnimation = pA.defendFlip
 
   end
-
 end
 
 function love.mousereleased(x, y, button, isTouch)
@@ -183,13 +180,13 @@ function playerAttack()
       if distanceToPlayer < 64 and player.attackState == true then
         v.currentHealth = v.currentHealth - 10
         if player.direction == 'right' then
-          v.body:applyLinearImpulse(50, -100)
+            v.body:applyLinearImpulse(50, -100)
         elseif player.direction == 'left' then
-          v.body:applyLinearImpulse(-50, -100)
+            v.body:applyLinearImpulse(-50, -100)
         end
-        if v.currentHealth <= 0 then
-          v.dead = true
-        end
+            if v.currentHealth <= 0 then
+                v.dead = true
       end
+    end
   end
 end
