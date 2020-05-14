@@ -24,6 +24,9 @@ function love.load()
   enemyLoad()
 
 timer = 0
+  function frame1(n)
+    currentAnimation:gotoFrame(n)
+  end
 end
 
 function love.update(dt)
@@ -44,10 +47,9 @@ function love.draw()
   gameMap:drawLayer(gameMap.layers["background"])
   gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
   playerDraw()
-  cam:detach()
 
   enemyDraw()
-
+cam:detach()
 end
 
 function beginContact(a, b, coll)
@@ -64,7 +66,7 @@ function beginContact(a, b, coll)
         for _, v in pairs(enemy) do
           v.touchingPlayer = true
         end
-      elseif a:getUserData() == 'platform' and b:getUserData() == 'enemy' then
+      elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
         for _, v in pairs(enemy) do
           v.grounded = true
           v.jumping = false
@@ -90,7 +92,7 @@ if a:getUserData() then
         for _, v in pairs(enemy) do
           v.touchingPlayer = false
         end
-      elseif a:getUserData() == 'platform' and b:getUserData() == 'enemy' then
+      elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
         for _, v in pairs(enemy) do
           v.grounded = false
           v.jumping = true
