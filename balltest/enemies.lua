@@ -7,7 +7,7 @@ function enemyLoad()
   function spawnEnemy()
     enemies = {}
 
-    enemies.body = love.physics.newBody(myWorld, 198, 443, "dynamic")
+    enemies.body = love.physics.newBody(myWorld, 0, 0, "dynamic")
     enemies.shape = love.physics.newCircleShape(20)
     enemies.fixture = love.physics.newFixture(enemies.body, enemies.shape)
     enemies.fixture:setCategory(enemiesCategory)
@@ -39,7 +39,7 @@ function enemyLoad()
   eA.idleFlip = anim8.newAnimation(enemyGrid('1-4',1), 0.15):flipH()
 
   eCurrentAnimation = eA.idle
-  
+
 end
 
 function enemyUpdate(dt)

@@ -7,16 +7,17 @@ function loadPlayer()
   function spawnPlayer()
     player = {}
 
-    player.body = love.physics.newBody(myWorld, 198, 443, "dynamic")
+    player.body = love.physics.newBody(myWorld, 0, 0, "dynamic")
     player.shape = love.physics.newRectangleShape(48, 48)
     player.fixture = love.physics.newFixture(player.body, player.shape)
     player.fixture:setUserData('player')
+    player.fixture:setCategory(playerCategory)
     player.body:setFixedRotation(true)
     player.jumpHeight = -1000
 
     player.grounded = false
-    player.x = 100
-    player.y = love.graphics.getHeight()/2
+    player.x = 0
+    player.y = 0
     player.speed = 200
     player.armor = 20
     player.attack = math.random(1,25)

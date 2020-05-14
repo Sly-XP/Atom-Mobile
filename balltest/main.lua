@@ -4,17 +4,24 @@ function love.load()
   require('namegen/namegen')
   anim8 = require 'anim8'
   require('enemies')
-  require('platform')
   Timer = require "timer"
+  sti = require "sti"
+  cameraFile = require("camera")
+  require('platform')
+  cam = cameraFile()
+
+  gameMap = sti("map/newMap.lua")
+
 
   myWorld = love.physics.newWorld(0, 500, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
+  for i, obj in pairs(gameMap.layers["Platforms"].objects) do
+    spawnPlatform(obj.x, obj.y, obj.width, obj.height)
+  end
+
   loadPlayer()
   enemyLoad()
-
-  spawnPlatform(1000, 50, 0, 550)
-
 
 timer = 0
 end
@@ -27,22 +34,30 @@ function love.update(dt)
   enemyUpdate(dt)
   myWorld:update(dt)
 
+  gameMap:update(dt)
+  cam:lookAt(player.body:getX(), love.graphics.getHeight()/2)
+
 end
 
 function love.draw()
+  cam:attach()
+  gameMap:drawLayer(gameMap.layers["background"])
+  gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
   playerDraw()
+  cam:detach()
+
   enemyDraw()
-  platformDraw()
 
 end
 
 function beginContact(a, b, coll)
   x,y = coll:getNormal()
 
-  if a:getUserData() == "player" and b:getUserData() == 'platform' then
+  local userDataA = a:getUserData()
+  local userDataB = b:getUserData()
+  if userDataA == 'Platforms' and userDataB == 'player' then
     player.grounded = true
   end
-
   if a:getUserData() then
     if b:getUserData() then
       if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
@@ -63,8 +78,9 @@ end
 
 function endContact(a, b, coll)
   x,y = coll:getNormal()
-
-  if a:getUserData() == "player" and b:getUserData() == 'platform' then
+  local userDataA = a:getUserData()
+  local userDataB = b:getUserData()
+  if userDataA == 'Platforms' and userDataB == 'player' then
     player.grounded = false
   end
 
