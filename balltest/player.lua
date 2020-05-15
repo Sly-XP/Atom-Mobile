@@ -58,6 +58,7 @@ function loadPlayer()
       end
    end)
 
+-- Function in end of both attack animations to make player only attack once
   pA.attackFlip = anim8.newAnimation(playerGrid('2-8',3), 0.05,
   function(x,y)
   for k,v in pairs(enemy) do
@@ -94,6 +95,7 @@ function playerMovement(dt)
 
     if love.keyboard.isDown('a') and love.keyboard.isDown('d') then
       currentAnimation = pA.idle
+
     end
 
     if player.grounded == false and player.direction == 'right' then

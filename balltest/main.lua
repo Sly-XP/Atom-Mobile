@@ -4,8 +4,8 @@ function love.load()
   require('namegen/namegen')
   anim8 = require 'anim8'
   require('enemies')
-  Timer = require "timer"
   sti = require "sti"
+  timer = require "timer"
   cameraFile = require("camera")
   require('platform')
   cam = cameraFile()
@@ -23,31 +23,29 @@ function love.load()
   loadPlayer()
   enemyLoad()
 
-timer = 0
   function frame1(n)
     currentAnimation:gotoFrame(n)
   end
+
+  enemyTimer = timer.new()
 end
 
 function love.update(dt)
-  timer = timer + dt
-  Timer.update(dt)
   playerMovement(dt)
   playerAnimUpdate(dt)
   enemyUpdate(dt)
   myWorld:update(dt)
-
   gameMap:update(dt)
+  timer.update(dt)
+  enemyTimer:update(dt)
   cam:lookAt(player.body:getX(), love.graphics.getHeight()/2)
 
 end
-
 function love.draw()
   cam:attach()
-  gameMap:drawLayer(gameMap.layers["background"])
   gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
   playerDraw()
-
+gameMap:drawLayer(gameMap.layers["background"])
   enemyDraw()
 cam:detach()
 end
@@ -69,7 +67,7 @@ function beginContact(a, b, coll)
       elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
         for _, v in pairs(enemy) do
           v.grounded = true
-          v.jumping = false
+        --  v.jumping = false
         end
       end
     end
@@ -95,14 +93,11 @@ if a:getUserData() then
       elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
         for _, v in pairs(enemy) do
           v.grounded = false
-          v.jumping = true
+        --  v.jumping = true
         end
       end
     end
   end
-
-
-
 end
 
 function distanceBetween(x1, y1, x2, y2)

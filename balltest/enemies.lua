@@ -10,12 +10,13 @@ function enemyLoad()
     enemies.body = love.physics.newBody(myWorld, love.mouse.getX() + 32, love.mouse.getY(), "dynamic")
     enemies.shape = love.physics.newCircleShape(20)
     enemies.fixture = love.physics.newFixture(enemies.body, enemies.shape)
+    enemies.fixture:setFriction(1)
     enemies.fixture:setCategory(enemiesCategory)
     --enemies.fixture:setMask(playerCategory)
     enemies.fixture:setUserData('enemy')
     enemies.body:setFixedRotation(true)
 
-    enemies.jumping   = true
+    enemies.jumping   = false
     enemies.grounded  = false
     enemies.speed     = 100
     enemies.dead      = false
@@ -35,7 +36,7 @@ function enemyLoad()
 
   enemyImage = love.graphics.newImage('assets/slime.png')
   enemyGrid = anim8.newGrid(64, 64, enemyImage:getWidth(), enemyImage:getHeight())
-
+  eA.healthbar = love.graphics.newImage('assets/slimeHealth.png')
   eA.idle = anim8.newAnimation(enemyGrid('1-4',1), 0.15)
   eA.idleFlip = anim8.newAnimation(enemyGrid('1-4',1), 0.15):flipH()
 
@@ -47,8 +48,10 @@ function enemyUpdate(dt)
   moveEnemy(dt)
   removeDeadEnemy()
   enemyDirection()
-
   eCurrentAnimation:update(dt)
+  moveEnemy(dt)
+  enemyJump()
+  moveEnemy(dt)
 
 end
 
@@ -65,17 +68,10 @@ function enemyDraw()
   drawHealthBar()
 end
 
-function moveEnemy(dt)
-  for k,v in pairs(enemy) do
-    local enemyX, enemyY, playerX, playerY = v.body:getX(), v.body:getY(), player.body:getX(), player.body:getY()
-    distanceToPlayer = distanceBetween(playerX, playerY, enemyX, enemyY)
-  end
-end
-
 function drawHealthBar()
   for k,v in pairs(enemy) do
     love.graphics.setColor(1, 0, 0)
-    local bodyX, bodyY = v.body:getX()-20, v.body:getY()-35
+    local bodyX, bodyY = v.body:getX()-20, v.body:getY()-40
     love.graphics.rectangle('fill', bodyX, bodyY, 40, 10)
     love.graphics.setColor(1, 1, 1, 1)
     local greenWidth = v.currentHealth / v.maxHealth * 40
@@ -83,6 +79,7 @@ function drawHealthBar()
     love.graphics.rectangle("fill", bodyX, bodyY, greenWidth, 10)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.print(v.currentHealth, 10, 210)
+    love.graphics.draw(eA.healthbar, bodyX- 1, bodyY- 1)
   end
 end
 
@@ -106,6 +103,29 @@ function enemyDirection()
     elseif player.body:getX() > v.body:getX() then
       v.direction = 'right'
       eCurrentAnimation = eA.idle
+    end
+  end
+end
+
+function enemyJump()
+  for k,v in pairs(enemy) do
+    enemyTimer:after(3, function() v.jumping = true
+      enemyTimer:after(0.00001, function() v.jumping = false
+        enemyTimer:clear() end)
+    end)
+  end
+end
+
+function moveEnemy(dt)
+  for k,v in pairs(enemy) do
+    local enemyX, enemyY, playerX, playerY = v.body:getX(), v.body:getY(), player.body:getX(), player.body:getY()
+    distanceToPlayer = distanceBetween(playerX, playerY, enemyX, enemyY)
+    if v.jumping == true and distanceToPlayer > 64 and v.direction == 'left' then
+        local xMovement = -distanceToPlayer * 15 * dt
+      v.body:applyLinearImpulse(xMovement, -125)
+    elseif  v.jumping == true and distanceToPlayer > 64 and v.direction == 'right' then
+        local xMovement = distanceToPlayer * 15 * dt
+        v.body:applyLinearImpulse(xMovement, -125)
     end
   end
 end
