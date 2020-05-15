@@ -1,7 +1,6 @@
 function love.load()
   math.randomseed(os.time())
   require('player')
-  require('namegen/namegen')
   anim8 = require 'anim8'
   require('enemies')
   sti = require "sti"
