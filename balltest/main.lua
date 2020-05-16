@@ -1,3 +1,4 @@
+require("lovedebug")
 function love.load()
   math.randomseed(os.time())
   require('player')
@@ -10,7 +11,6 @@ function love.load()
   cam = cameraFile()
 
   gameMap = sti("map/newMap.lua")
-
 
   myWorld = love.physics.newWorld(0, 500, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -38,15 +38,15 @@ function love.update(dt)
   timer.update(dt)
   enemyTimer:update(dt)
   cam:lookAt(player.body:getX(), love.graphics.getHeight()/2)
-
 end
+
 function love.draw()
   cam:attach()
   gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
   playerDraw()
-gameMap:drawLayer(gameMap.layers["background"])
+  gameMap:drawLayer(gameMap.layers["background"])
   enemyDraw()
-cam:detach()
+  cam:detach()
 end
 
 function beginContact(a, b, coll)

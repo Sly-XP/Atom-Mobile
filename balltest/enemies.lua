@@ -109,21 +109,28 @@ end
 
 function enemyJump()
   for k,v in pairs(enemy) do
-    enemyTimer:after(3, function() v.jumping = true
-      enemyTimer:after(0.00001, function() v.jumping = false
+    if #enemy >= 1 then
+    enemyTimer:after(3,
+    function() v.jumping = true
+      print('Startjump', v)
+      enemyTimer:clear()
+      enemyTimer:after(0.00001,
+      function() v.jumping = false
+        print('EndJump', v)
         enemyTimer:clear() end)
     end)
+    end
   end
 end
 
 function moveEnemy(dt)
   for k,v in pairs(enemy) do
     local enemyX, enemyY, playerX, playerY = v.body:getX(), v.body:getY(), player.body:getX(), player.body:getY()
-    distanceToPlayer = distanceBetween(playerX, playerY, enemyX, enemyY)
-    if v.jumping == true and distanceToPlayer > 64 and v.direction == 'left' then
+    local distanceToPlayer = distanceBetween(playerX, playerY, enemyX, enemyY)
+    if v.jumping == true and distanceToPlayer > 64 and v.direction == 'left' and v.grounded == true then
         local xMovement = -distanceToPlayer * 15 * dt
-      v.body:applyLinearImpulse(xMovement, -125)
-    elseif  v.jumping == true and distanceToPlayer > 64 and v.direction == 'right' then
+          v.body:applyLinearImpulse(xMovement, -125)
+    elseif  v.jumping == true and distanceToPlayer > 64 and v.direction == 'right' and v.grounded == true then
         local xMovement = distanceToPlayer * 15 * dt
         v.body:applyLinearImpulse(xMovement, -125)
     end
