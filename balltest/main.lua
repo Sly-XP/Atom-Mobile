@@ -1,16 +1,19 @@
-require("lovedebug")
+io.stdout:setvbuf('no') -- Makes print()s get pushed instantly to whatever terminal you're running in (I use Git Bash).
+
+anim8 = require 'anim8'
+sti = require "sti"
+timer = require "timer"
+cameraFile = require("camera")
+require('player')
+require('platform')
+local enemies = require('enemies')
+
 function love.load()
   math.randomseed(os.time())
-  require('player')
-  anim8 = require 'anim8'
-  require('enemies')
-  sti = require "sti"
-  timer = require "timer"
-  cameraFile = require("camera")
-  require('platform')
   cam = cameraFile()
 
   gameMap = sti("map/newMap.lua")
+
 
   myWorld = love.physics.newWorld(0, 500, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -20,23 +23,20 @@ function love.load()
   end
 
   loadPlayer()
-  enemyLoad()
+  enemies.load()
 
   function frame1(n)
     currentAnimation:gotoFrame(n)
   end
-
-  enemyTimer = timer.new()
 end
 
 function love.update(dt)
   playerMovement(dt)
   playerAnimUpdate(dt)
-  enemyUpdate(dt)
+  enemies.update(dt)
   myWorld:update(dt)
   gameMap:update(dt)
   timer.update(dt)
-  enemyTimer:update(dt)
   cam:lookAt(player.body:getX(), love.graphics.getHeight()/2)
 end
 
@@ -45,7 +45,7 @@ function love.draw()
   gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
   playerDraw()
   gameMap:drawLayer(gameMap.layers["background"])
-  enemyDraw()
+  enemies.draw()
   cam:detach()
 end
 
@@ -60,19 +60,21 @@ function beginContact(a, b, coll)
   if a:getUserData() then
     if b:getUserData() then
       if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
-        for _, v in pairs(enemy) do
-          v.touchingPlayer = true
+        -- Need some way to check WHICH enemy this contact is for.
+        local bBody = b:getBody() -- can compare Bodies
+        local enemy = enemies.getEnemyMatchingBody(bBody)
+        if enemy then
+          enemy.touchingPlayer = true
         end
       elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
-        for _, v in pairs(enemy) do
-          v.grounded = true
-        --  v.jumping = false
+        local bBody = b:getBody()
+        local enemy = enemies.getEnemyMatchingBody(bBody)
+        if enemy then
+          enemy.grounded = true
         end
       end
     end
   end
-
-
 end
 
 function endContact(a, b, coll)
@@ -83,16 +85,19 @@ function endContact(a, b, coll)
     player.grounded = false
   end
 
-if a:getUserData() then
-  if b:getUserData() then
+  if a:getUserData() then
+    if b:getUserData() then
       if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
-        for _, v in pairs(enemy) do
-          v.touchingPlayer = false
+        local bBody = b:getBody()
+        local enemy = enemies.getEnemyMatchingBody(bBody)
+        if enemy then
+          enemy.touchingPlayer = false
         end
       elseif a:getUserData() == 'Platforms' and b:getUserData() == 'enemy' then
-        for _, v in pairs(enemy) do
-          v.grounded = false
-        --  v.jumping = true
+        local bBody = b:getBody()
+        local enemy = enemies.getEnemyMatchingBody(bBody)
+        if enemy then
+          enemy.grounded = false
         end
       end
     end
