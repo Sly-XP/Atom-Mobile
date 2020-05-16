@@ -1,4 +1,6 @@
 
+-- https://love2d.org/forums/memberlist.php?mode=viewprofile&u=139962 Ross is a G
+
 local M = {} -- M for 'Module'. When you require it you give it any name you want, like "enemies".
 -- For example: local enemies = require('enemies')
 -- Only things that are added to this table can be used by other files.
@@ -44,8 +46,6 @@ function M.spawn(x, y) -- Add to the module table, not a global function.
   enemy.dead           = false
   enemy.currentHealth  = 50
   enemy.maxHealth      = 50
-  enemy.attack         = math.random(1, 25)
-  enemy.armor          = math.random(1, 15)
   enemy.attacking      = false
   enemy.touchingPlayer = false
   enemy.direction      = 'right'
