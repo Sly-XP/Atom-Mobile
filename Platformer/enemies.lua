@@ -123,7 +123,7 @@ local function move(enemy, dt)
 
     enemy.distanceToPlayer = distanceToPlayer -- To print on the screen later - Store this on the enemy instead of making it global.
 
-    if distanceToPlayer > 64 then
+    if distanceToPlayer > 256 then
       local vx, vy = enemy.body:getLinearVelocity()
       if math.abs(vx) < enemy.speed then
         local xMovement = enemy.moveForce * dt
