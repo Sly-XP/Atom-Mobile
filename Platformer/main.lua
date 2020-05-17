@@ -5,29 +5,31 @@ sti = require "sti"
 timer = require "timer"
 cameraFile = require("camera")
 require('player')
-require('platform')
+local platform = require('platform')
 local enemies = require('enemies')
+local upgrades = require('upgrades')
+dice = require('dice')
+require("lovedebug")
 
 function love.load()
+  love.window.setMode(1400, 800)
+  love.window.setTitle("Platformer")
   math.randomseed(os.time())
   cam = cameraFile()
 
   gameMap = sti("map/newMap.lua")
 
-
   myWorld = love.physics.newWorld(0, 500, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
-  for i, obj in pairs(gameMap.layers["Platforms"].objects) do
-    spawnPlatform(obj.x, obj.y, obj.width, obj.height)
-  end
-
+  loadPlatforms()
   loadPlayer()
   enemies.load()
 
   function frame1(n)
     currentAnimation:gotoFrame(n)
   end
+  spawnPlayer()
 end
 
 function love.update(dt)
@@ -37,7 +39,8 @@ function love.update(dt)
   myWorld:update(dt)
   gameMap:update(dt)
   timer.update(dt)
-  cam:lookAt(player.body:getX(), love.graphics.getHeight()/2)
+  pAttackTimer:update(dt)
+  cam:lookAt(player.body:getX(), player.body:getY())
 end
 
 function love.draw()

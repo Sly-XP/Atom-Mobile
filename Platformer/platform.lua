@@ -1,8 +1,8 @@
-platforms = {}
+  local M = {}
+  local platforms = {}
+  local platformCategory = 3
 
-  platformCategory = 3
-
-  function spawnPlatform(x, y, width, height)
+  function M.spawn(x, y, width, height)
     local platform = {}
     platform.body = love.physics.newBody(myWorld, x, y, "static")
     platform.shape = love.physics.newRectangleShape(width/2, height/2, width, height)
@@ -14,3 +14,9 @@ platforms = {}
 
     table.insert(platforms, platform)
   end
+
+function loadPlatforms()
+    for i, obj in pairs(gameMap.layers["Platforms"].objects) do
+        M.spawn(obj.x, obj.y, obj.width, obj.height)
+    end
+end
