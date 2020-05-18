@@ -1,5 +1,5 @@
 local enemies = require('enemies')
-
+local coin = require('coins')
 
 function loadPlayer()
 
@@ -30,6 +30,7 @@ function loadPlayer()
 		player.direction = nil
 		player.moving = false
 		player.canAttack = true
+		player.score = 0
 
 		table.insert(playerT, player)
 	end
@@ -128,7 +129,7 @@ function playerDraw()
 		currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),	nil, nil, nil, 32, 42)
 			local x, y = player.body:getPosition()
 			local p = love.graphics.print
-			p("Attacking: " ..tostring(player.attackState), x - 10, y - 50)
+			p("Money: " ..player.score, x - 10, y - 50)
 	end
 
 end
@@ -142,6 +143,9 @@ function love.keypressed(key, scancode, isrepeat)
 	end
 	if scancode == 's' then
 		enemies.spawn(love.mouse.getX() + 32, love.mouse.getY())
+	end
+	if scancode == 'c' then
+		coin.spawn(love.mouse.getX()/2, love.mouse.getY()/2)
 	end
 end
 

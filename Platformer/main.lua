@@ -10,6 +10,7 @@ local enemies = require('enemies')
 local upgrades = require('upgrades')
 dice = require('dice')
 require("lovedebug")
+local coin = require('coins')
 
 function love.load()
   love.window.setMode(1400, 800)
@@ -25,11 +26,12 @@ function love.load()
   loadPlatforms()
   loadPlayer()
   enemies.load()
-
   function frame1(n)
     currentAnimation:gotoFrame(n)
   end
   spawnPlayer()
+
+  coin.load()
 end
 
 function love.update(dt)
@@ -40,6 +42,7 @@ function love.update(dt)
   gameMap:update(dt)
   timer.update(dt)
   pAttackTimer:update(dt)
+  coin.update(dt)
   cam:lookAt(player.body:getX(), player.body:getY())
 end
 
@@ -49,6 +52,7 @@ function love.draw()
   playerDraw()
   gameMap:drawLayer(gameMap.layers["background"])
   enemies.draw()
+  coin.draw()
   cam:detach()
 end
 
@@ -60,6 +64,7 @@ function beginContact(a, b, coll)
   if userDataA == 'Platforms' and userDataB == 'player' then
     player.grounded = true
   end
+
   if a:getUserData() then
     if b:getUserData() then
       if a:getUserData() == 'player' and b:getUserData() == 'enemy' then
@@ -77,6 +82,16 @@ function beginContact(a, b, coll)
         end
       end
     end
+
+    if a:getUserData() == 'player' and b:getUserData() == 'coin' then
+      local coinBody = b:getBody()
+      local coins = coin.getCoinMatchingBody(coinBody)
+      if coins then
+        coins.collected = true
+        coins.body:destroy()
+      end
+    end
+
   end
 end
 
