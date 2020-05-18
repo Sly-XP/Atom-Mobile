@@ -8,6 +8,7 @@ require('player')
 local platform = require('platform')
 local enemies = require('enemies')
 local upgrades = require('upgrades')
+local float = require('float')
 dice = require('dice')
 require("lovedebug")
 local coin = require('coins')
@@ -30,8 +31,12 @@ function love.load()
     currentAnimation:gotoFrame(n)
   end
   spawnPlayer()
-
   coin.load()
+  float.load()
+  float.spawn(800, 300)
+  float.spawn(1300, 400)
+  float.spawn(1100, 500)
+
 end
 
 function love.update(dt)
@@ -43,6 +48,7 @@ function love.update(dt)
   timer.update(dt)
   pAttackTimer:update(dt)
   coin.update(dt)
+  float.update(dt)
   cam:lookAt(player.body:getX(), player.body:getY())
 end
 
@@ -53,6 +59,7 @@ function love.draw()
   gameMap:drawLayer(gameMap.layers["background"])
   enemies.draw()
   coin.draw()
+  float.draw()
   cam:detach()
 end
 
@@ -124,4 +131,13 @@ end
 
 function distanceBetween(x1, y1, x2, y2)
   return math.sqrt((y2 - y1)^2 + (x2 - x1)^2)
+end
+
+function math.randomchoice(t) --Selects a random item from a table
+    local keys = {}
+    for key, value in pairs(t) do
+        keys[#keys+1] = key --Store keys in another table
+    end
+    index = keys[math.random(1, #keys)]
+    return t[index]
 end

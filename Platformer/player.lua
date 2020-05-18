@@ -35,7 +35,6 @@ function loadPlayer()
 		table.insert(playerT, player)
 	end
 
-
 	playerImage = love.graphics.newImage('assets/LightBandit.png')
 	playerGrid = anim8.newGrid(64, 64, playerImage:getWidth(), playerImage:getHeight())
 
@@ -83,7 +82,7 @@ function loadPlayer()
 	pA.jump 		= anim8.newAnimation(playerGrid('4-4',5), 0.1)
 	pA.jumpFlip = anim8.newAnimation(playerGrid('4-4',5), 0.1):flipH()
 
-	 currentAnimation = pA.idleFlip
+	 currentAnimation = pA.idle
 
 end
 
@@ -125,11 +124,13 @@ function playerAnimUpdate(dt)
 end
 
 function playerDraw()
+	currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),	nil, nil, nil, 32, 42)
 	for k,v in pairs(playerT) do
-		currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),	nil, nil, nil, 32, 42)
 			local x, y = player.body:getPosition()
 			local p = love.graphics.print
-			p("Money: " ..player.score, x - 10, y - 50)
+			--p("Money: " ..player.score, x - 10, y - 50)
+			p('X: ' ..player.body:getX(),x - 10, y -50)
+			p("Y: " ..player.body:getY(), x- 10, y-70)
 	end
 
 end

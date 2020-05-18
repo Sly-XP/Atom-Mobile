@@ -17,7 +17,7 @@ function M.spawn(x, y, vy)
   coin.y = y
   coin.currentAnim = cAnimation:clone()
   coin.collected = false
-  local vy = coin.body:applyLinearImpulse(math.random(-20, 30), math.random(-100, -300))
+  local vy = coin.body:applyLinearImpulse(math.random(-50, 50), math.random(-100, -200))
   coin.vy = vy
 
   table.insert(coins, coin)
