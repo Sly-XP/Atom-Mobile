@@ -97,14 +97,12 @@ function M.load() -- Fill predefined variables with loaded assets.
   idleAnimation = anim8.newAnimation(enemyGrid('1-4',1), 0.15)
 end
 
-function spawnCoinifDead()
-
-end
 
 local function removeIfDead(enemy, thisEnemyIndex)
   if enemy.currentHealth <= 0 then
     enemy.dead = true
-      for i = 1, 25 do
+      local randomCoin = math.random(5, 30)
+      for i = 1, randomCoin do
         coin.spawn(enemy.body:getX(), enemy.body:getY(), vy)
       end
     enemy.body:destroy()
@@ -157,7 +155,7 @@ function M.update(dt)
     if not enemy.dead then
       decideDirection(enemy)
       enemy.currentAnim:update(dt)
-      move(enemy, dt)
+      --move(enemy, dt)
     end
   end
 end
