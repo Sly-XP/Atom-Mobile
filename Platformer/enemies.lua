@@ -1,9 +1,12 @@
-
+local coin = require('coins')
 -- https://love2d.org/forums/memberlist.php?mode=viewprofile&u=139962 Ross is a G
 
 local M = {} -- M for 'Module'. When you require it you give it any name you want, like "enemies".
 -- For example: local enemies = require('enemies')
 -- Only things that are added to this table can be used by other files.
+
+-- Require coin module for enemies
+local coin = require('coins')
 
 -- Define variables as local to this file. Nobody else needs to use these.
 
@@ -21,6 +24,9 @@ local enemyGrid
 local idleAnimation
 
 local function jump(enemy)
+  local enemyX, enemyY = enemy.body:getPosition()
+  local playerX, playerY = player.body:getPosition()
+  local distanceToPlayer = distanceBetween(playerX, playerY, enemyX, enemyY)
   local forceX = jumpForceX
   if enemy.direction == 'left' then
     forceX = -forceX
@@ -49,7 +55,8 @@ function M.spawn(x, y) -- Add to the module table, not a global function.
   enemy.attacking      = false
   enemy.touchingPlayer = false
   enemy.direction      = 'right'
-  enemy.isHit          = false
+  enemy.hit            = false
+  enemy.coinAmount     = 0
   -- Give each enemy its own animation, so they can each act independently.
   enemy.currentAnim    = idleAnimation:clone()
   -- Save the timer handle so we can cancel it on death.
@@ -90,9 +97,16 @@ function M.load() -- Fill predefined variables with loaded assets.
   idleAnimation = anim8.newAnimation(enemyGrid('1-4',1), 0.15)
 end
 
+function spawnCoinifDead()
+
+end
+
 local function removeIfDead(enemy, thisEnemyIndex)
   if enemy.currentHealth <= 0 then
     enemy.dead = true
+      for i = 1, 25 do
+        coin.spawn(enemy.body:getX(), enemy.body:getY(), vy)
+      end
     enemy.body:destroy()
     enemyTimer:cancel(enemy.jumpTimer)
     table.remove(enemies, thisEnemyIndex)
@@ -123,7 +137,7 @@ local function move(enemy, dt)
 
     enemy.distanceToPlayer = distanceToPlayer -- To print on the screen later - Store this on the enemy instead of making it global.
 
-    if distanceToPlayer > 256 then
+    if distanceToPlayer > 128 then
       local vx, vy = enemy.body:getLinearVelocity()
       if math.abs(vx) < enemy.speed then
         local xMovement = enemy.moveForce * dt
