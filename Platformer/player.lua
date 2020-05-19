@@ -12,14 +12,14 @@ function loadPlayer()
 		player = {}
 
  		-- NOTE: hard-coded X-pos so the player doesn't always fall off the map at the start.
-		player.body = love.physics.newBody(myWorld, 532, 0, "dynamic")
+		player.body = love.physics.newBody(myWorld, 1671, 10807, "dynamic")
 		player.shape = love.physics.newRectangleShape(48, 48)
 		player.fixture = love.physics.newFixture(player.body, player.shape)
 		player.fixture:setUserData('player')
 		player.fixture:setCategory(playerCategory)
 		player.body:setFixedRotation(true)
 
-		player.jumpHeight = -1000
+		player.jumpHeight = -1500
 		player.grounded = false
 		player.speed = 200
 		player.armor = 20
@@ -122,6 +122,11 @@ function playerDraw()
 	for k,v in pairs(playerT) do
 			local x, y = player.body:getPosition()
 			local p = love.graphics.print
+			p(x, player.body:getX(), player.body:getY() - 50)
+			p(y, player.body:getX(), player.body:getY() - 70)
+			p(player.score, x, y-90)
+
+
 	end
 
 end
@@ -134,7 +139,7 @@ function love.keypressed(key, scancode, isrepeat)
 		player.body:applyLinearImpulse(0, player.jumpHeight)
 	end
 	if scancode == 's' then
-		enemies.spawn(love.mouse.getX() + 32, love.mouse.getY())
+		enemies.spawn(player.body:getX() - 100, player.body:getY())
 	end
 	if scancode == 'c' then
 		coin.spawn(love.mouse.getX()/2, love.mouse.getY()/2)

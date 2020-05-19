@@ -12,7 +12,7 @@ local platformCategory = 3
     local height = float.image:getHeight()
 
     float.body = love.physics.newBody(myWorld, x, y, "kinematic")
-    float.shape = love.physics.newRectangleShape(width/2, height/2, width, height)
+    float.shape = love.physics.newRectangleShape(width/2 - 15, height/2 + 5, width, height)
     float.fixture = love.physics.newFixture(float.body, float.shape)
     float.fixture:setCategory(platformCategory)
     float.fixture:setUserData('floatingPlatforms')
@@ -24,8 +24,8 @@ local platformCategory = 3
 
     float.x           = float.body:getX()
     float.y           = float.body:getY()
-    float.w           = float.image:getWidth()
-    float.h           = float.image:getHeight()
+    float.w           = width
+    float.h           = height
 
     float.maxY        = maxY
     float.minY        = minY
@@ -52,8 +52,8 @@ local platformCategory = 3
 
   function M.draw()
     for i,float in pairs(floats) do
-    love.graphics.draw(float.image, float.body:getX(), float.body:getY())
-    love.graphics.rectangle('line', float.body:getX(), float.body:getY(), float.w, float.h)
+      love.graphics.draw(float.image, float.body:getX(), float.body:getY())
+    --  love.graphics.rectangle('line', float.body:getX(), float.body:getY(), float.w, float.h)
     end
 
   end
@@ -68,8 +68,14 @@ local platformCategory = 3
 
     if float.top == false then
       float.body:setY(getY - float.speed * dt)
+      if float.body:isTouching(player.body) then
+         player.body:setY(player.body:getY() - float.speed * dt)
+       end
     elseif float.top == true then
       float.body:setY(getY + float.speed * dt)
+      if float.body:isTouching(player.body) then
+        player.body:setY(player.body:getY() + float.speed * dt)
+      end
     end
   end
 

@@ -9,10 +9,9 @@ local platform = require('platform')
 local enemies = require('enemies')
 local upgrades = require('upgrades')
 local float = require('float')
+local coin = require('coins')
 dice = require('dice')
 require("lovedebug")
-local coin = require('coins')
-gravity = 700
 
 function love.load()
   love.window.setMode(1400, 800)
@@ -22,7 +21,7 @@ function love.load()
 
   gameMap = sti("map/newMap.lua")
 
-  myWorld = love.physics.newWorld(0, gravity, false)
+  myWorld = love.physics.newWorld(0, 700, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
   loadPlatforms()
@@ -34,15 +33,15 @@ function love.load()
   spawnPlayer()
   coin.load()
   float.load()
-  -- Testing floating platforms, not permanent solution
-  float.spawn(400, 300)
-  float.spawn(600, 300)
-  float.spawn(800, 300)
-  float.spawn(1000, 300)
+
+  for i, obj in pairs(gameMap.layers["float"].objects) do
+      float.spawn(obj.x, obj.y)
+  end
 
 end
 
 function love.update(dt)
+  float.update(dt)
   playerMovement(dt)
   playerAnimUpdate(dt)
   enemies.update(dt)
@@ -51,7 +50,6 @@ function love.update(dt)
   timer.update(dt)
   pAttackTimer:update(dt)
   coin.update(dt)
-  float.update(dt)
   cam:lookAt(player.body:getX(), player.body:getY())
 end
 
@@ -65,6 +63,7 @@ function love.draw()
   float.draw()
   cam:detach()
 end
+
 
 function beginContact(a, b, coll)
   x,y = coll:getNormal()
