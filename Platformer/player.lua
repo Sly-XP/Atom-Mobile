@@ -52,9 +52,6 @@ function loadPlayer()
 		function(x, y)
 			for k,v in pairs(enemies.getList()) do
 				local distanceToPlayer = distanceBetween(player.body:getX(), player.body:getY(), v.body:getX(), v.body:getY())
-				--[[if player.attackState == true and distanceToPlayer < 64 then
-					v.currentHealth = v.currentHealth - player.attack
-				end]]
 			end
 			player.attackState = false
 			if currentAnimation == x and player.attackState == false and player.direction == 'left' and player.moving == false then
@@ -68,9 +65,6 @@ function loadPlayer()
 		function(x,y)
 			for k,v in pairs(enemies.getList()) do
 				local distanceToPlayer = distanceBetween(player.body:getX(), player.body:getY(), v.body:getX(), v.body:getY())
-			--[[	if player.attackState == true and distanceToPlayer < 64 then
-						v.currentHealth = v.currentHealth - player.attack
-					end]]
 			end
 			player.attackState = false
 			if currentAnimation == x and player.attackState == false and player.direction == 'right' and player.moving == false then
