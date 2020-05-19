@@ -128,9 +128,6 @@ function playerDraw()
 	for k,v in pairs(playerT) do
 			local x, y = player.body:getPosition()
 			local p = love.graphics.print
-			--p("Money: " ..player.score, x - 10, y - 50)
-			p('X: ' ..player.body:getX(),x - 10, y -50)
-			p("Y: " ..player.body:getY(), x- 10, y-70)
 	end
 
 end

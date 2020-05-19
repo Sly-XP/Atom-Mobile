@@ -12,6 +12,7 @@ local float = require('float')
 dice = require('dice')
 require("lovedebug")
 local coin = require('coins')
+gravity = 700
 
 function love.load()
   love.window.setMode(1400, 800)
@@ -21,7 +22,7 @@ function love.load()
 
   gameMap = sti("map/newMap.lua")
 
-  myWorld = love.physics.newWorld(0, 500, false)
+  myWorld = love.physics.newWorld(0, gravity, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
   loadPlatforms()
@@ -33,9 +34,11 @@ function love.load()
   spawnPlayer()
   coin.load()
   float.load()
+  -- Testing floating platforms, not permanent solution
+  float.spawn(400, 300)
+  float.spawn(600, 300)
   float.spawn(800, 300)
-  float.spawn(1300, 400)
-  float.spawn(1100, 500)
+  float.spawn(1000, 300)
 
 end
 
@@ -68,8 +71,17 @@ function beginContact(a, b, coll)
 
   local userDataA = a:getUserData()
   local userDataB = b:getUserData()
+
   if userDataA == 'Platforms' and userDataB == 'player' then
     player.grounded = true
+  elseif userDataA == 'player' and userDataB == 'floatingPlatforms' then
+    -- Ross method on figuring out which body player is touching, can be done
+    -- with player.body:isTouching(floatingPlatform)
+    local bBody = b:getBody()
+    local floatingPlatform = float.getFloatMatchingBody(bBody)
+    if floatingPlatform then
+      player.grounded = true
+    end
   end
 
   if a:getUserData() then
@@ -107,6 +119,8 @@ function endContact(a, b, coll)
   local userDataA = a:getUserData()
   local userDataB = b:getUserData()
   if userDataA == 'Platforms' and userDataB == 'player' then
+    player.grounded = false
+  elseif userDataA == 'player' and userDataB == 'floatingPlatforms' then
     player.grounded = false
   end
 
