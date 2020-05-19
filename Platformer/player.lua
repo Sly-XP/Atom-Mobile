@@ -22,7 +22,8 @@ function loadPlayer()
 		player.jumpHeight = -1500
 		player.grounded = false
 		player.speed = 200
-		player.armor = 20
+		player.currentArmor = 20
+		player.maxArmor = 20
 		player.attack = 0
 		player.dead = false
 		player.attackState = false
@@ -31,6 +32,8 @@ function loadPlayer()
 		player.moving = false
 		player.canAttack = true
 		player.score = 0
+		player.currentHealth = 100
+		player.maxHealth = 100
 
 		table.insert(playerT, player)
 	end
@@ -38,6 +41,7 @@ function loadPlayer()
 	playerImage = love.graphics.newImage('assets/LightBandit.png')
 	playerGrid = anim8.newGrid(64, 64, playerImage:getWidth(), playerImage:getHeight())
 
+	playerBar = love.graphics.newImage('assets/playerBar.png')
 
 	pA = {}
 	pA.idle 			= anim8.newAnimation(playerGrid('1-4',1), 0.15)
@@ -118,15 +122,17 @@ function playerAnimUpdate(dt)
 end
 
 function playerDraw()
+	local mouseX, mouseY = cam:mousePosition()
+	local playerX, playerY = player.body:getX(), player.body:getY()
+		if distanceBetween(mouseX, mouseY, playerX, playerY) < 32 then
+			love.graphics.setColor(0, 0, 0, 0)
+			drawPlayerHealthBar()
+			drawPlayerArmorBar()
+		end
 	currentAnimation:draw(playerImage, player.body:getX(), player.body:getY(),	nil, nil, nil, 32, 42)
 	for k,v in pairs(playerT) do
 			local x, y = player.body:getPosition()
 			local p = love.graphics.print
-			p(x, player.body:getX(), player.body:getY() - 50)
-			p(y, player.body:getX(), player.body:getY() - 70)
-			p(player.score, x, y-90)
-
-
 	end
 
 end
@@ -241,6 +247,30 @@ function playerDirection()
 			setAnim(pA.idle)
 		end
 	end
+end
+
+function drawPlayerHealthBar()
+	love.graphics.setColor(1, 0, 0)
+	local bodyX, bodyY = player.body:getX()-20, player.body:getY()-50
+	love.graphics.rectangle('fill', bodyX, bodyY, 40, 10)
+	love.graphics.setColor(1, 1, 1, 1)
+	local greenWidth = player.currentHealth / player.maxHealth * 40
+	love.graphics.setColor(0, 1, 0, 1)
+	love.graphics.rectangle("fill", bodyX, bodyY, greenWidth, 10)
+	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.draw(playerBar, bodyX, bodyY)
+end
+
+function drawPlayerArmorBar()
+	love.graphics.setColor(1, 0, 0)
+	local bodyX, bodyY = player.body:getX()-20, player.body:getY()-60
+	--love.graphics.rectangle('fill', bodyX, bodyY, 40, 10)
+	love.graphics.setColor(1, 1, 1, 1)
+	local blueWidth = player.currentArmor / player.maxArmor * 40
+	love.graphics.setColor(0, 0, 1, 1)
+	love.graphics.rectangle("fill", bodyX, bodyY, blueWidth, 10)
+	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.draw(playerBar, bodyX, bodyY)
 end
 
 function setAnim(x)

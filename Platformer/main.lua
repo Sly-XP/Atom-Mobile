@@ -37,6 +37,9 @@ function love.load()
   for i, obj in pairs(gameMap.layers["float"].objects) do
       float.spawn(obj.x, obj.y)
   end
+  for i, obj in pairs(gameMap.layers["enemy"].objects) do
+      enemies.spawn(obj.x, obj.y)
+  end
 
 end
 

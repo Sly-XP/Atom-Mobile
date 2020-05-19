@@ -8,8 +8,8 @@ return {
   height = 700,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 22,
-  nextobjectid = 111,
+  nextlayerid = 23,
+  nextobjectid = 117,
   properties = {},
   tilesets = {
     {
@@ -1687,6 +1687,58 @@ return {
           shape = "rectangle",
           x = 1024,
           y = 9872,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      id = 22,
+      name = "enemy",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 113,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1440,
+          y = 10496,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 114,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1760,
+          y = 10624,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 116,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1904,
+          y = 10816,
           width = 16,
           height = 16,
           rotation = 0,

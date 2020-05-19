@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="right-down" width="200" height="700" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="111">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="right-down" width="200" height="700" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="117">
  <editorsettings>
   <export target="newMap.lua" format="lua"/>
  </editorsettings>
@@ -1429,5 +1429,10 @@
   <object id="108" x="1824" y="9888" width="16" height="16"/>
   <object id="109" x="1408" y="10032" width="16" height="16"/>
   <object id="110" x="1024" y="9872" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="22" name="enemy">
+  <object id="113" x="1440" y="10496" width="16" height="16"/>
+  <object id="114" x="1760" y="10624" width="16" height="16"/>
+  <object id="116" x="1904" y="10816" width="16" height="16"/>
  </objectgroup>
 </map>

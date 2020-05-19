@@ -19,6 +19,7 @@ function M.spawn(x, y, vy)
   coin.collected = false
   local vy = coin.body:applyLinearImpulse(math.random(-150, 150), math.random(-100, -200))
   coin.vy = vy
+  coin.distanceToPlayer = distanceBetween(player.body:getX(), player.body:getY(), coin.body:getX(), coin.body:getY())
 
   table.insert(coins, coin)
 end
@@ -30,8 +31,10 @@ cAnimation = anim8.newAnimation(coinGrid('1-8',1),  0.08)
 end
 
 function M.update(dt)
+
   for i,coin in pairs(coins) do
     coin.currentAnim:update(dt)
+    moveCoin(coin, dt)
   end
 
   for i=#coins,1,-1 do
@@ -41,12 +44,12 @@ function M.update(dt)
     player.score = player.score + 1
     end
   end
+
 end
 
 
 function M.draw()
   for k,v in pairs(coins) do
-
     for i, coin in pairs(coins) do
       coin.currentAnim:draw(coinSprite, v.body:getX(), v.body:getY())
     end
@@ -61,5 +64,13 @@ function M.getCoinMatchingBody(body)
   end
 end
 
+function moveCoin(coin, dt)
+  if coin.collected == false and coin.distanceToPlayer < player.body:getX() then
+    coin.body:setX(coin.body:getX() - coin.distanceToPlayer * dt )
+  end
+  if coin.collected == false and coin.distanceToPlayer > player.body:getX() then
+    coin.body:setX(coin.body:getX() + coin.distanceToPlayer * dt )
+  end
+end
 
 return M
