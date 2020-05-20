@@ -109,7 +109,6 @@ function beginContact(a, b, coll)
       local coins = coin.getCoinMatchingBody(coinBody)
       if coins then
         coins.collected = true
-        coins.body:destroy()
       end
     end
 
